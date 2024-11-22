@@ -37,7 +37,7 @@ def create_app():
     app.logger.setLevel(logging.DEBUG)
 
     app.logger.debug("App created")
-
+    
     # Import and register blueprints
     from .views import views
     from .auth import auth

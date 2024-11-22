@@ -1,11 +1,13 @@
 import os
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
-from flask_login import current_user
-from .models import db, Patient, Patient_history
-
+from flask_login import current_user, login_required  # Import login_required here
+from .models import db, Bet, BetParticipation, BetResult, User
 
 views = Blueprint('views', __name__)
 
+@views.route('/')
+def home():
+    return render_template('home.html')
 
 @views.route('/project-dashboard', methods=['GET', 'POST'])
 def project_dashboard():
@@ -41,15 +43,3 @@ def project_dashboard():
 def bet_history():
     bet_history = BetParticipation.query.filter_by(user_id=current_user.id).all()
     return render_template('bethistory.html', bet_history=bet_history)
-'''
-@views.route('/patient/<int:patient_id>/history', methods=['GET'])
-def patient_history(patient_id):
-    patient = Patient.query.get_or_404(patient_id)
-    history = Patient_history.query.filter_by(patient_id=patient_id).all()
-    
-    # Retrieve prediction_result from the query params
-    prediction_result = request.args.get('prediction_result')
-    
-    return render_template('patient_history_and_result.html', patient=patient, history=history, prediction_result=prediction_result)
-
-'''
