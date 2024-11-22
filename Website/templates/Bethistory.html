@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}
+Bet History
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Bet History</h1>
+
+    {% if bet_history %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Event</th>
+                <th>Option Chosen</th>
+                <th>Result</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bet in bet_history %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ bet.title }}</td>
+                <td>{{ bet.option }}</td>
+                <td>
+                    {% if bet.result %}
+                    {{ bet.result }}
+                    {% else %}
+                    Pending
+                    {% endif %}
+                </td>
+                <td>{{ bet.placed_at.strftime('%Y-%m-%d') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="text-muted">No bet history available.</p>
+    {% endif %}
+</div>
+{% endblock %}

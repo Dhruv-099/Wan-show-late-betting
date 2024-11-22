@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Place Your Bet{% endblock %}
+
+{% block content %}
+<div class="mt-5 container">
+    <h1 class="mb-4">Place Your Bet</h1>
+    <form action="{{ url_for('views.project_dashboard') }}" method="post">
+        <!-- Event Name -->
+        <div class="form-group">
+            <label for="event">Event:</label>
+            <select class="form-control" id="event" name="event" required>
+                <option value="">Select Event</option>
+                {% for event in events %}
+                <option value="{{ event.id }}">{{ event.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <!-- Betting Option -->
+        <div class="form-group mt-3">
+            <label for="bet_option">Your Bet:</label>
+            <input type="text" class="form-control" id="bet_option" name="bet_option" placeholder="Enter your bet (e.g., '30 minutes late')" required>
+        </div>
+        
+        <!-- Username (optional if logged in) -->
+        {% if not current_user.is_authenticated %}
+        <div class="form-group mt-3">
+            <label for="username">Your Name:</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Enter your name" required>
+        </div>
+        {% endif %}
+        
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary mt-4">Place Bet</button>
+    </form>
+</div>
+{% endblock %}

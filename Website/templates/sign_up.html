@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<!-- Sign Up Form Section -->
+<section class="signup-section d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div class="signup-form bg-light p-5 rounded shadow-lg">
+        <h2 class="text-center mb-4">Sign Up</h2>
+
+        <!-- Change form action to point to the sign-up route -->
+        <form action="{{ url_for('auth.sign_up') }}" method="post">
+            
+            <!-- Username Input -->
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="firstName" required placeholder="Enter your username">
+            </div>
+            
+            <!-- Email Input -->
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required placeholder="Enter your email">
+            </div>
+            
+            <!-- Password Input -->
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password1" required placeholder="Enter your password">
+            </div>
+            
+            <!-- Confirm Password Input -->
+            <div class="mb-3">
+                <label for="confirm_password" class="form-label">Confirm Password</label>
+                <!-- Name should be password2 to match backend logic -->
+                <input type="password" class="form-control" id="confirm_password" name="password2" required placeholder="Confirm your password">
+            </div>
+            
+            <!-- Submit Button -->
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+            </div>
+
+            <!-- Flash Messages for validation errors -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <ul class="flashes">
+                        {% for category, message in messages %}
+                            <li class="alert alert-{{ category }}">{{ message }}</li> <!-- Add alert classes for better formatting -->
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+            
+            <p class="text-center mt-3">Already have an account? <a href="{{ url_for('auth.forgot-password') }}">Login here</a></p>
+        </form>
+    </div>
+</section>
+{% endblock %}

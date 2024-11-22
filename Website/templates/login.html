@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<!-- Login Form Section -->
+<section class="login-section d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div class="login-form bg-light p-5 rounded shadow-lg">
+        <h2 class="text-center mb-4">Login</h2>
+        <form action="{{ url_for('auth.login') }}" method="post"> <!-- Corrected action -->
+            <div class="mb-3">
+                <label for="username" class="form-label">Email</label> <!-- Changed to email for consistency -->
+                <input type="email" class="form-control" id="email" name="email" required placeholder="Enter your email">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required placeholder="Enter your password">
+            </div>
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </div>
+            <p class="text-center mt-3"><a href="{{ url_for('auth.login') }}">Forgot Password?</a></p>
+        </form>
+    </div>
+</section>
+{% endblock %}
