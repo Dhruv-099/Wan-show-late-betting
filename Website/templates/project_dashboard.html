@@ -3,36 +3,41 @@
 {% block title %}Place Your Bet{% endblock %}
 
 {% block content %}
-<div class="mt-5 container">
+<div class="container mt-5">
     <h1 class="mb-4">Place Your Bet</h1>
+    {% if events %}
     <form action="{{ url_for('views.project_dashboard') }}" method="post">
-        <!-- Event Name -->
+        
         <div class="form-group">
             <label for="event">Event:</label>
-            <select class="form-control" id="event" name="event" required>
+            <select class="form-control" id="event" name="event_id" required>
                 <option value="">Select Event</option>
                 {% for event in events %}
-                <option value="{{ event.id }}">{{ event.name }}</option>
+                <option value="{{ event.id }}">{{ event.title }}</option>
                 {% endfor %}
             </select>
         </div>
         
-        <!-- Betting Option -->
         <div class="form-group mt-3">
-            <label for="bet_option">Your Bet:</label>
-            <input type="text" class="form-control" id="bet_option" name="bet_option" placeholder="Enter your bet (e.g., '30 minutes late')" required>
+            <label for="bet_option">Your Prediction:</label>
+            <select class="form-control" id="bet_option" name="bet_option" required>
+                <option value="">Select Prediction</option>
+                {% for option in events[0].options %}
+                <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select>
         </div>
-        
-        <!-- Username (optional if logged in) -->
-        {% if not current_user.is_authenticated %}
+
         <div class="form-group mt-3">
-            <label for="username">Your Name:</label>
-            <input type="text" class="form-control" id="username" name="username" placeholder="Enter your name" required>
+            <label for="wager_amount">Points to Wager:</label>
+            <input type="number" class="form-control" id="wager_amount" name="wager_amount" placeholder="e.g., 100" required min="1">
         </div>
-        {% endif %}
         
         <!-- Submit Button -->
         <button type="submit" class="btn btn-primary mt-4">Place Bet</button>
     </form>
+    {% else %}
+    <p class="text-muted">No active betting events available. Please check back later.</p>
+    {% endif %}
 </div>
 {% endblock %}

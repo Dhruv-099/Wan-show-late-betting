@@ -36,14 +36,14 @@ class Bet(db.Model):
 class BetParticipation(db.Model):
     __tablename__ = 'bet_participation'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # Link to user
-    bet_id = db.Column(db.Integer, db.ForeignKey('bets.id'), nullable=False)  # Link to bet
-    option = db.Column(db.String(100), nullable=False)  # Selected option
-    placed_at = db.Column(db.DateTime, default=datetime.utcnow)  # Bet placement time
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    bet_id = db.Column(db.Integer, db.ForeignKey('bets.id'), nullable=False)
+    option = db.Column(db.String(100), nullable=False)
+    placed_at = db.Column(db.DateTime, default=datetime.utcnow)
+    wager_amount = db.Column(db.Integer, nullable=False, default=0)
 
     def __repr__(self):
         return f"<BetParticipation User {self.user_id} Bet {self.bet_id} Option {self.option}>"
-
 class BetResult(db.Model):
     __tablename__ = 'bet_results'
     id = db.Column(db.Integer, primary_key=True)
@@ -57,10 +57,15 @@ class BetResult(db.Model):
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True, nullable=False)  # Username for the user
-    email = db.Column(db.String(120), unique=True, nullable=False)  # User email
-    password = db.Column(db.String(255), nullable=False)  # Hashed password
+    username = db.Column(db.String(50), unique=True, nullable=False)  
+    password = db.Column(db.String(255), nullable=True)  
+    
+    email = db.Column(db.String(120), unique=True, nullable=True)  
+    points = db.Column(db.Integer, default=1000)
+    last_login_at = db.Column(db.DateTime, default=datetime.utcnow)
     participations = db.relationship('BetParticipation', backref='user', lazy=True)
+    last_weekly_claim = db.Column(db.Date)
 
-    def __repr__(self):
-        return f"<User {self.username}>"
+    @property
+    def is_registered(self):
+        return self.password is not None

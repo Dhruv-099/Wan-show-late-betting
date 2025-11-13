@@ -23,31 +23,25 @@
         </button>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="navbar-nav ml-auto">
+        {% if g.user %}
+            <li class="nav-item">
+                <a class="nav-link" href="#">{{ g.user.username }} ({{ g.user.points }} pts)</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="nav-dashboard" href="{{ url_for('views.project_dashboard') }}">Dashboard</a>
+            </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="nav-home" href="{{ url_for('views.home') }}">Home</a>
-                </li>
-    
-                {% if current_user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" id="nav-logout" href="{{ url_for('auth.logout') }}">Logout</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="nav-dashboard" href="{{ url_for('views.project_dashboard') }}">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            {{ current_user.firstName[0] | upper }}  
-                        </a>
-                    </li>
-                {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" id="nav-login" href="{{ url_for('auth.login') }}">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="nav-sign-up" href="{{ url_for('auth.sign_up') }}">Sign Up</a>
-                    </li>
-                {% endif %}
-            </ul>
+                <a class="nav-link" id="nav-bet-history" href="{{ url_for('views.bet_history') }}">Bet History</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="nav-logout" href="{{ url_for('auth.logout') }}">Logout</a>
+            </li>
+        {% else %}
+            <li class="nav-item">
+                <a class="nav-link" id="nav-home" href="{{ url_for('views.home') }}">Home</a>
+            </li>
+        {% endif %}
+    </ul>
         </div>
     </nav>    
 

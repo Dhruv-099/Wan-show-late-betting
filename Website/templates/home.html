@@ -20,7 +20,16 @@
     </div>
 </section>
 
-
+<!-- In home.html, inside the header or a new section -->
+<div class="text-center">
+    <h2>Choose Your Name</h2>
+    <form action="{{ url_for('auth.choose_name') }}" method="POST" class="form-inline justify-content-center">
+        <div class="form-group mx-sm-3 mb-2">
+            <input type="text" class="form-control" name="username" placeholder="Enter your username" required>
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Let's Go!</button>
+    </form>
+</div>
 <!-- Footer Section -->
 <footer class="bg-dark text-white py-4">
     <div class="container text-center">

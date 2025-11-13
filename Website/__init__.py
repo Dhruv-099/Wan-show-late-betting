@@ -1,24 +1,14 @@
-from flask import Flask
+from flask import Flask, g, session
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager, current_user
 import logging
 from flask_migrate import Migrate
 
-# Initialize extensions
 db = SQLAlchemy()
 migrate = Migrate()
-DB_NAME = 'database.db'
 login_manager = LoginManager()
-
-def create_db(app):
-    """Create the database if it doesn't exist."""
-    if not path.exists('website/' + DB_NAME):
-        with app.app_context():  
-            db.create_all()  
-        app.logger.info('Created Database!')
-    else:
-        app.logger.info('Database already exists.')
+DB_NAME = 'database.db'
 
 def create_app():
     """Initialize and configure the Flask application."""
@@ -27,41 +17,38 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'  
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    # Initialize extensions
-    db.init_app(app)
-    migrate.init_app(app, db)
-
-    # Configure logging
     logging.basicConfig(level=logging.DEBUG)
     app.logger.addHandler(logging.StreamHandler())
     app.logger.setLevel(logging.DEBUG)
 
     app.logger.debug("App created")
     
-    # Import and register blueprints
+    db.init_app(app)
+    migrate.init_app(app, db)
+    login_manager.init_app(app)
+
     from .views import views
     from .auth import auth
+    from .models import User 
+
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
-
-    # Import models
-    from .models import User, Bet, BetParticipation, BetResult  # Replace with actual model names
-
-    # Create the database
-    create_db(app)
-
-    # Setup login manager
-    login_manager.init_app(app)
-    login_manager.login_view = 'auth.login'  
 
     @login_manager.user_loader
     def load_user(id):
         """Load user by ID for Flask-Login."""
         return User.query.get(int(id))
 
+    @app.before_request
+    def load_user_before_request():
+        user_id = session.get('user_id')
+        if user_id is None:
+            g.user = None
+        else:
+            g.user = User.query.get(user_id)
+
     @app.context_processor
-    def inject_user():
-        """Inject the current user into the template context."""
-        return dict(current_user=current_user) 
+    def inject_user_and_guest():
+        return dict(user=g.user)
 
     return app
